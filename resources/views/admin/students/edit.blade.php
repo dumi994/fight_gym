@@ -179,7 +179,10 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Aggiorna</button>
+     <div class="p-5">
+
+        <button type="submit" class="btn btn-primary w-100">Aggiorna</button>
+      </div>
     </form>
   </div>
 </div>

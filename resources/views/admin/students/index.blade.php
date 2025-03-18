@@ -35,19 +35,19 @@
         <td>{{$student->first_name}} {{$student->last_name}}</td>
         <td>{{$student->email}}</td>
         <td>
-            @if($user->courses->isEmpty())
+            @if($student->courses->isEmpty())
                 <span class="badge bg-secondary">Nessun corso</span>
             @else
-                @foreach($user->courses as $course)
-                    <span class="badge 
-                        @if($loop->index % 5 == 0) bg-primary 
-                        @elseif($loop->index % 5 == 1) bg-success 
-                        @elseif($loop->index % 5 == 2) bg-danger 
-                        @elseif($loop->index % 5 == 3) bg-warning 
-                        @else bg-info 
-                        @endif">
-                        {{ $course->title }}
-                    </span>
+              @foreach($student->courses as $course)
+                <span class="badge 
+                  @if($loop->index % 5 == 0) bg-primary 
+                  @elseif($loop->index % 5 == 1) bg-success 
+                  @elseif($loop->index % 5 == 2) bg-danger 
+                  @elseif($loop->index % 5 == 3) bg-warning 
+                  @else bg-info 
+                  @endif">
+                  {{ $course->title }}
+                </span>
                 @endforeach
             @endif
         </td>

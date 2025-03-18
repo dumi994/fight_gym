@@ -164,15 +164,12 @@
             @enderror
           </div>
         </div>
+      </div>
+      <div class="p-5">
 
-
-
-
-
-
+        <button type="submit" class="btn btn-primary w-100">Aggiungi</button>
       </div>
 
-      <button type="submit" class="btn btn-primary">Aggiungi</button>
     </form>
   </div>
 </div>

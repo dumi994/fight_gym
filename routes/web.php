@@ -51,6 +51,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('/dashboard/students', StudentController::class);
     Route::post('/dashboard/assign-courses', [UserController::class, 'assignCourses'])->name('assign.courses');
     Route::resource('/dashboard/attendances', AttendanceController::class);
+    Route::get('/dashboard/attendances-report', [StudentController::class, 'attendanceReport'])->name('users.attendance_report');
 
     /* PRESENZE */
     /* Route::resource('attendances', AttendanceController::class); */

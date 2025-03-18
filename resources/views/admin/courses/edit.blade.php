@@ -168,7 +168,7 @@
 
       </div>
 
-      <button type="submit" class="btn btn-primary">{{ isset($course) ? 'Aggiorna' : 'Aggiungi' }}</button>
+      <button type="submit" class="btn btn-primary w-100">Aggiorna</button>
     </form>
   </div>
 </div>

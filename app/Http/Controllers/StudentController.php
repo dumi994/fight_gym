@@ -192,4 +192,10 @@ class StudentController extends Controller
 
         return redirect()->route('students.index')->with('delete', 'Allievo eliminato con successo!');
     }
+
+    public function attendanceReport()
+    {
+        $students = Student::with('attendances')->get(); // Carica le presenze
+        return view('admin.students.attendance-report', compact('students'));
+    }
 }

@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Salva</button>
+      <button type="submit" class="btn btn-primary w-100">Salva</button>
     </form>
   </div>
 </div>

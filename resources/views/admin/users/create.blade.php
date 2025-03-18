@@ -35,6 +35,16 @@
           </span>
           @enderror
         </div>
+         <div class="form-group col-md-12">
+          <label for="password_confirmation">Conferma Password</label>
+          <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required>
+          @error('password')
+          <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+          </span>
+          @enderror
+        </div>
+        
         <div class="form-group col-md-12">
           <label for="role">Ruolo</label>
           <select id="role" class="form-control @error('role') is-invalid @enderror" name="role" required>
@@ -53,7 +63,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Aggiungi</button>
+      <button type="submit" class="btn btn-primary w-100">Aggiungi</button>
     </form>
   </div>
 </div>

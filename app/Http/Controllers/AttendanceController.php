@@ -8,6 +8,7 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AttendanceController extends Controller
 {
@@ -37,33 +38,52 @@ class AttendanceController extends Controller
      */
     public function storeOrUpdate(Request $request)
     {
-        \Log::info("Dati ricevuti: " . json_encode($request->all()));
+        // Log dei dati ricevuti per debugging
+        Log::info('📥 Dati ricevuti:', $request->all());
 
         $request->validate([
+            'attendance' => 'array',
             'course_id' => 'required|exists:courses,id',
             'attendance_date' => 'required|date',
-            'attendance' => 'required|array',
-            'attendance.*' => 'in:present,absent'
         ]);
 
-        $userId = auth()->id(); //  Prende l'ID dell'utente loggato
+        // Ottieni tutti gli studenti iscritti al corso
+        $students = Student::whereHas('courses', function ($query) use ($request) {
+            $query->where('courses.id', $request->course_id);
+        })->get();
 
-        foreach ($request->attendance as $studentId => $status) {
-            Attendance::updateOrCreate(
-                [
+        foreach ($students as $student) {
+            $studentId = $student->id;
+            $status = $request->attendance[$studentId] ?? 'absent'; // Se non è stato inviato, assume "absent"
+
+            Log::info("✅ Gestione presenza per student_id: $studentId, course_id: {$request->course_id}, status: $status");
+
+            if ($status === 'absent') {
+                // Se è assente, elimina il record se esiste
+                Attendance::where([
                     'student_id' => $studentId,
                     'course_id' => $request->course_id,
-                    'attendance_date' => $request->attendance_date
-                ],
-                [
-                    'status' => $status,
-                    'user_id' => $userId //  Assicura che l'utente venga registrato
-                ]
-            );
+                    'attendance_date' => $request->attendance_date,
+                ])->delete();
+            } else {
+                // Se è presente, crea o aggiorna il record
+                Attendance::updateOrCreate(
+                    [
+                        'student_id' => $studentId,
+                        'course_id' => $request->course_id,
+                        'attendance_date' => $request->attendance_date,
+                    ],
+                    [
+                        'status' => $status,
+                        'user_id' => auth()->id(),
+                    ]
+                );
+            }
         }
 
-        return response()->json(['message' => 'Presenze aggiornate con successo!']);
+        return response()->json(['message' => '✅ Presenze salvate con successo!'], 200);
     }
+
 
     /*  public function store(Request $request)
     {
@@ -136,8 +156,33 @@ class AttendanceController extends Controller
     {
         //
     }
-
     public function getAttendances($courseId, Request $request)
+    {
+        $date = $request->query('date');
+
+        // Recupera SOLO gli studenti iscritti al corso selezionato
+        $students = \App\Models\Student::whereHas('courses', function ($query) use ($courseId) {
+            $query->where('courses.id', $courseId);
+        })->get();
+
+        // Recupera SOLO le presenze di quel corso e di quella data
+        $attendances = Attendance::where('course_id', $courseId)
+            ->where('attendance_date', $date)
+            ->get()
+            ->keyBy('student_id'); // Associa le presenze allo student_id
+
+        return response()->json([
+            'students' => $students->map(function ($student) use ($attendances) {
+                return [
+                    'id' => $student->id,
+                    'name' => $student->first_name . ' ' . $student->last_name,
+                    'status' => $attendances->has($student->id) ? $attendances[$student->id]->status : 'absent'
+                ];
+            }),
+        ]);
+    }
+
+    /*   public function getAttendances($courseId, Request $request)
     {
         $date = $request->query('date', now()->toDateString()); // Data selezionata nel calendario
 
@@ -162,7 +207,7 @@ class AttendanceController extends Controller
         });
 
         return response()->json(['students' => $studentsData]);
-    }
+    } */
 
 
     public function getCourseDetails($courseId)

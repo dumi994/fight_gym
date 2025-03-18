@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use DB;
-
+use  Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -32,23 +33,26 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
-            'level' => 'required',
-            'days' => 'required',
-            'trainers' => 'array', // Deve essere un array
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|exists:roles,name', // Verifica che il ruolo esista
         ]);
 
-        $course = Course::create($request->only(['title', 'level', 'days']));
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-        // Associa i trainer selezionati al corso
-        if ($request->has('trainers')) {
-            $course->users()->sync($request->trainers);
-        }
+        // Assegna il ruolo (singolo)
+        $user->assignRole($request->role);
 
-        return redirect()->route('courses.index')->with('success', 'Corso creato con successo!');
+        return redirect()->route('users.index')->with('success', 'Utente creato con successo!');
     }
 
     /**
@@ -72,27 +76,31 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Course $course)
+    public function update(Request $request, User $user)
     {
         $request->validate([
-            'title' => 'required',
-            'level' => 'required',
-            'days' => 'required',
-            'trainers' => 'array',
+            'name' => 'required|string|max:255',
+            'email' => "required|email|unique:users,email,{$user->id}",
+            'password' => 'nullable|string|min:8|confirmed',
+            'role' => 'required|string', // Accettiamo un solo ruolo come stringa
         ]);
 
-        $course->update($request->only(['title', 'level', 'days']));
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
 
-        // Aggiorna i trainer associati al corso
-        if ($request->has('trainers')) {
-            $course->users()->sync($request->trainers);
-        } else {
-            $course->users()->detach(); // Rimuove tutti i trainer se nessuno è selezionato
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
         }
 
-        return redirect()->route('courses.index')->with('success', 'Corso aggiornato con successo!');
-    }
+        $user->update($data);
 
+        // Assicuriamoci che venga passato un array
+        $user->syncRoles([$request->role]);
+
+        return redirect()->route('users.index')->with('success', 'Utente aggiornato con successo!');
+    }
     /**
      * Remove the specified resource from storage.
      */
