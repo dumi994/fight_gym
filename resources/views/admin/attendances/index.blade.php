@@ -1,7 +1,7 @@
 @extends('layouts.tpl')
 
 @section('content')
-<div class="container mt-5">
+<div class="p-3 mt-5">
     <h1 class="text-center">Registro delle Presenze</h1>
 
     <div id="calendar"></div>
@@ -24,7 +24,7 @@
           <div id="studentsList">
             <p>Caricamento studenti...</p>
           </div>
-          <button type="submit" class="btn btn-success">Salva Presenze</button>
+        
         </form>
       </div>
     </div>
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         firstDay: 1,
         events: '/api/courses',
         eventClick: function(info) {
-            console.log("Evento cliccato:", info.event);
+            console.log("📅 Evento cliccato:", info.event);
             openAttendanceModal(info.event.id, info.event.startStr);
         }
     });
@@ -65,11 +65,11 @@ function openAttendanceModal(courseId, date) {
     document.getElementById('course_id').value = courseId;
     document.getElementById('attendance_date').value = date;
 
-    // ⚡ Recupero dei dati del corso e degli studenti
+    // 🔄 Recupero delle presenze dal server
     fetch(`/api-attendances/${courseId}?date=${date}`)
         .then(response => response.json())
         .then(data => {
-            console.log("Dati ricevuti:", data); // Debug
+            console.log("📊 Dati ricevuti:", data);
 
             let studentsList = document.getElementById('studentsList');
             studentsList.innerHTML = '';
@@ -79,8 +79,15 @@ function openAttendanceModal(courseId, date) {
                 return;
             }
 
+            // 🚀 Mostra gli studenti con il loro stato (✅ presente / ❌ assente)
             data.students.forEach(student => {
-                let color = student.status === 'present' ? '🟢' : '🔴';
+                let color;
+                if(student.status == 'present'){
+                  color = '🟢';
+                }else{
+                  color = '🔴';
+
+                }
                 studentsList.innerHTML += `
                     <div class="d-flex align-items-center">
                         <span class="me-2">${color}</span>
@@ -88,22 +95,9 @@ function openAttendanceModal(courseId, date) {
                     </div>
                 `;
             });
-
-            // 🔥 Forza il ridisegno del calendario per evitare bug grafici
-            setTimeout(() => {
-                let calendarEl = document.getElementById('calendar');
-                if (calendarEl) {
-                    let calendar = FullCalendar.Calendar.getCalendar(calendarEl);
-                    if (calendar) calendar.updateSize();
-                }
-            }, 300);
         })
-        .catch(error => console.error("Errore nel recupero dei dati:", error));
+        .catch(error => console.error("⚠️ Errore nel recupero dei dati:", error));
 }
 
-document.getElementById("closeModalButton").addEventListener("click", function() {
-    var modal = bootstrap.Modal.getInstance(document.getElementById("attendanceModal"));
-    modal.hide();
-});
 </script>
 @endsection

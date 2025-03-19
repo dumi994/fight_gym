@@ -69,30 +69,26 @@
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
         <!-- Profile Dropdown Menu -->
+        <!-- Profile Dropdown Menu -->
         <li class="nav-item dropdown">
-          <a class="nav-link" data-toggle="dropdown" href="#">
+          <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fas fa-user"></i>
             <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
-            <i class="fas fa-caret-down"></i>
           </a>
-          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-            <!-- User Profile -->
-            <span class="dropdown-item dropdown-header">{{ Auth::user()->name }}</span>
-            <a href="{{ route('profile.edit') }}" class="dropdown-item">
-              <i class="fas fa-user mr-2"></i> Profile
-            </a>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-cogs mr-2"></i> Settings
-            </a>
-            <div class="dropdown-divider"></div>
-            <!-- Logout Link -->
-            <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-              <i class="fas fa-sign-out-alt mr-2"></i> Logout
-            </a>
+          <ul class="dropdown-menu dropdown-menu-end" id="userDropdownMenu">
+            <li><span class="dropdown-item dropdown-header">{{ Auth::user()->name }}</span></li>
+            <li><a href="{{ route('profile.edit') }}" class="dropdown-item"><i class="fas fa-user mr-2"></i> Profilo</a></li>
+           
+            <li><div class="dropdown-divider"></div></li>
+            <li>
+              <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              </a>
+            </li>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
               @csrf
             </form>
-          </div>
+          </ul>
         </li>
         <!-- Messages Dropdown Menu -->
         <!--  <li class="nav-item dropdown">

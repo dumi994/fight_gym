@@ -2,7 +2,12 @@
 
 use App\Models\User;
 use App\Models\Course;
+use Carbon\Carbon;
 
+function getMonthName($month)
+{
+  return Carbon::create(null, $month)->locale('it')->translatedFormat('F');
+}
 
 function getSidebarData($type)
 {

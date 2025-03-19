@@ -10,6 +10,9 @@ use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+use App\Models\StudentMembership;
+use Carbon\Carbon;
+
 class AttendanceController extends Controller
 {
     /**
@@ -39,7 +42,7 @@ class AttendanceController extends Controller
     public function storeOrUpdate(Request $request)
     {
         // Log dei dati ricevuti per debugging
-        Log::info('📥 Dati ricevuti:', $request->all());
+        //Log::info('Dati ricevuti:', $request->all());
 
         $request->validate([
             'attendance' => 'array',
@@ -56,7 +59,7 @@ class AttendanceController extends Controller
             $studentId = $student->id;
             $status = $request->attendance[$studentId] ?? 'absent'; // Se non è stato inviato, assume "absent"
 
-            Log::info("✅ Gestione presenza per student_id: $studentId, course_id: {$request->course_id}, status: $status");
+            //Log::info("Gestione presenza per student_id: $studentId, course_id: {$request->course_id}, status: $status");
 
             if ($status === 'absent') {
                 // Se è assente, elimina il record se esiste
@@ -78,6 +81,25 @@ class AttendanceController extends Controller
                         'user_id' => auth()->id(),
                     ]
                 );
+                $month = Carbon::parse($request->attendance_date)->format('m');
+                $year = Carbon::parse($request->attendance_date)->format('Y');
+                $existingMembership = StudentMembership::where('student_id', $studentId)
+                    ->where('month', $month)
+                    ->where('year', $year)
+                    ->first();
+
+                if (!$existingMembership) {
+                    StudentMembership::create([
+                        'student_id' => $studentId,
+                        'month' => $month,
+                        'year' => $year,
+                        'status' => 'unpaid',
+                        'reminder_sent' => false
+                    ]);
+                    Log::info("Mensilità creata per student_id: $studentId, mese: $month, anno: $year");
+                } else {
+                    Log::info("Mensilità già esistente per student_id: $studentId, mese: $month, anno: $year");
+                }
             }
         }
 

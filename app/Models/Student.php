@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\StudentMembership;
+use App\Models\Course;
+use App\Models\Attendance;
 
 class Student extends Model
 {
@@ -30,5 +33,9 @@ class Student extends Model
     public function attendances()
     {
         return $this->hasMany(Attendance::class, 'student_id');
+    }
+    public function memberships()
+    {
+        return $this->hasOne(StudentMembership::class);
     }
 }

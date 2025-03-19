@@ -10,9 +10,11 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AttendanceController;
 
 use App\Models\User;
+use App\Models\Student;
 
 use App\Http\Controllers\TrainerController;
 
+use App\Http\Controllers\MembershipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +41,7 @@ Route::get('/api-attendances/students/{courseId}', [AttendanceController::class,
 Route::get('/api-attendances/{courseId}', [AttendanceController::class, 'getAttendances']);
 Route::get('/api/courses', [AttendanceController::class, 'getCourses']);
 Route::get('/course-details/{courseId}', [AttendanceController::class, 'getCourseDetails']);
+Route::post('/update-membership', [MembershipController::class, 'update'])->name('membership.update');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/', function () {
@@ -55,6 +58,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     /* PRESENZE */
     /* Route::resource('attendances', AttendanceController::class); */
+    Route::get('/dashboard/membership', function () {
+        $students = Student::get();
+        return view('admin.membership.index', compact('students'));
+    });
 });
 
 Route::middleware(['auth', 'role:instructor'])->group(function () {
@@ -72,7 +79,9 @@ Route::middleware(['auth', 'role:instructor'])->group(function () {
 });
  */
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $students = Student::with(['attendances', 'memberships'])->get();
+    //dd($students);
+    return view('dashboard', compact('students'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
