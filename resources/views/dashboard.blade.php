@@ -48,8 +48,7 @@
                // dd($lastMembership);
             @endphp
         </td>
-      <td id="status-{{$student->id}}-{{$lastMembership->month}}-{{$lastMembership->year}}">
-
+        <td id="status-{{$student->id}}-{{$lastMembership->month}}-{{$lastMembership->year}}">
           @if ($lastMembership && $lastMembership->status == 'paid')
             🟢 {{ getMonthName($lastMembership->month)}} {{ $lastMembership->year }} pagato
           @else
@@ -59,11 +58,10 @@
         <td>
         <x-switch-button 
           :checked="$lastMembership && $lastMembership->status == 'paid'"
- 
           :data_student_id="$student->id ?? ''"
           :data_month="$lastMembership->month ?? ''"
           :data_year="$lastMembership->year ?? ''"
-          :data_student_name="$student->first_name . ' ' . $student->last_name"  
+          :student_name="$student->first_name . ' ' . $student->last_name"
         />
         </td>
     </tr>
@@ -130,8 +128,8 @@
         let studentName = this.getAttribute("data-student-name") || "Lo studente";
         let newStatus = this.checked ? "paid" : "unpaid";
 
-        if (!studentId || !month || !year) {
-            console.error("❌ Dati mancanti:", { studentId, month, year });
+        if (!studentId || !month || !year || !studentName) {
+            console.error("Dati mancanti:", { studentId, month, year, studentName });
             alert("Errore: dati mancanti!");
             this.checked = !this.checked; // Ripristina lo stato originale
             return;
@@ -189,7 +187,8 @@ function updateMembership(studentId, month, year, status, checkbox) {
             student_id: studentId,
             month: month,
             year: year,
-            status: status
+            status: status,
+            
         })
     })
     .then(response => response.json())

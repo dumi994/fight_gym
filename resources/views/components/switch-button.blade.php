@@ -103,14 +103,15 @@ input:checked + .slider:before {
   margin: 0 auto;
 }
 </style>
-@props(['checked' => false,  'data_student_id' => null, 'data_month' => null, 'data_year' => null])
+@props(['checked' => false, 'data_student_id' => null, 'data_month' => null, 'data_year' => null, 'student_name' => null])
 
 <label class="switch">
     <input type="checkbox"
       class="membership-checkbox"
+      data-student-name="{{ $student_name }}"
       data-student-id="{{ $data_student_id ?? '' }}"
       data-month="{{ $data_month ?? '' }}"  
-      data-year="{{ $data_year ?? '' }}"  
+      data-year="{{ $data_year ?? '' }}"    
       {{ $checked ? 'checked' : '' }}>
     <span class="slider round"></span>
 </label>
