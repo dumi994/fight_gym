@@ -36,8 +36,8 @@
         </td>
         <td>
             <!-- Verifica se ha almeno una presenza -->
-            @if ($student->attendances->count() > 0)
-                {{ $student->attendances->count() }} presenze
+            @if (isset($student->attendances) && $student->attendances->count() > 0)
+                ✔️ {{ $student->attendances->count() }} presenze
             @else
                 ❌ 0 presenze
             @endif
@@ -48,11 +48,11 @@
                // dd($lastMembership);
             @endphp
         </td>
-        <td id="status-{{$student->id}}-{{$lastMembership->month}}-{{$lastMembership->year}}">
+        <td id="status-{{$student->id}}{{ $lastMembership ? '-' . $lastMembership->month . '-' . $lastMembership->year : '' }}">
           @if ($lastMembership && $lastMembership->status == 'paid')
-            🟢 {{ getMonthName($lastMembership->month)}} {{ $lastMembership->year }} pagato
+              🟢 {{ getMonthName($lastMembership->month) }} {{ $lastMembership->year }} pagato
           @else
-            🔴
+              🔴
           @endif
         </td>
         <td>
@@ -196,7 +196,7 @@ function updateMembership(studentId, month, year, status, checkbox) {
         if (data.success) {
             Swal.fire("Successo!", `Lo stato del pagamento è stato aggiornato a ${status}.`, "success");
 
-            // 🔥 **Aggiorna dinamicamente il pallino**
+            // **Aggiorna dinamicamente il pallino**
             let statusCell = document.getElementById(`status-${studentId}-${month}-${year}`);
             if (statusCell) {
                 if (status === "paid") {
@@ -208,13 +208,13 @@ function updateMembership(studentId, month, year, status, checkbox) {
 
         } else {
             Swal.fire("Errore!", "Qualcosa è andato storto.", "error");
-            checkbox.checked = !checkbox.checked; // 🔥 Se fallisce, ripristina lo stato
+            checkbox.checked = !checkbox.checked; // Se fallisce, ripristina lo stato
         }
     })
     .catch(error => {
         console.error("Errore AJAX:", error);
         Swal.fire("Errore!", "Si è verificato un errore durante l'aggiornamento.", "error");
-        checkbox.checked = !checkbox.checked; // 🔥 Ripristina lo stato se l'AJAX fallisce
+        checkbox.checked = !checkbox.checked; // Ripristina lo stato se l'AJAX fallisce
     });
 }
 function getMonthName(month) {
