@@ -1,6 +1,5 @@
 @extends('layouts.tpl')
 
-
 @section('content')
 
 <div class="p-2">
@@ -19,76 +18,78 @@
     </div>
     @endif
   </div>
-  <table id="example" class="display mt-5  " style="width:100%">
-
+  
+  <table id="example" class="display mt-5" style="width:100%">
     <thead>
       <tr>
         <th>Nome</th>
         <th>Email</th>
-        <th>Durata</th>
-        <th>Livello</th>
-
+        <th>Corsi Associati</th>  <!-- 🔥 Nuova colonna -->
         <th style="width:8% !important;">Azioni</th>
       </tr>
     </thead>
+    
     <tbody>
-      @foreach($courses as $course)
+      @foreach($students as $student)
       <tr>
-        <td>{{$course->name}} </td>
-        <td>{{$course->state}}</td>
-        <td>{{$course->durability}}</td>
-        <td>{{$course->level}}</td>
+        <td>{{$student->first_name}} {{$student->last_name}}</td>
+        <td>{{$student->email}}</td>
+        <td>
+            @if($student->courses->isEmpty())
+                <span class="badge bg-secondary">Nessun corso</span>
+            @else
+              @foreach($student->courses as $course)
+                <span class="badge 
+                  @if($loop->index % 5 == 0) bg-primary 
+                  @elseif($loop->index % 5 == 1) bg-success 
+                  @elseif($loop->index % 5 == 2) bg-danger 
+                  @elseif($loop->index % 5 == 3) bg-warning 
+                  @else bg-info 
+                  @endif">
+                  {{ $course->title }}
+                </span>
+                @endforeach
+            @endif
+        </td>
+
 
         <td style="width:8% !important;">
-          <div class="d-flex justify-content-around">
-            <a href="{{ route('courses.edit',$course->id) }}">
+          <div class="d-flex justify-content-center">
+            <a href="{{ route('trainer.students.show', $student->id) }}">
               <span class="material-symbols-outlined">
-                border_color
+                info
               </span>
             </a>
-            <form action="{{ route('courses.destroy', $course->id) }}" method="POST" onsubmit="return confirmDelete();">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="btn btn-link p-0">
-                <span class="material-symbols-outlined text-danger">
-                  delete
-                </span>
-              </button>
-            </form>
-
+            
           </div>
         </td>
       </tr>
       @endforeach
-
-
     </tbody>
+
     <tfoot>
       <tr>
         <th>Nome</th>
         <th>Email</th>
-
-        <th>Durata</th>
-        <th>Livello</th>
-
+        <th>Corsi Associati</th>
         <th style="width:8% !important;">Azioni</th>
       </tr>
     </tfoot>
   </table>
 </div>
+
 @endsection
 
 @section('scripts')
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     new DataTable('#example');
-    // Aggiungi un listener a tutti i form di eliminazione
+
     document.querySelectorAll('form[method="POST"]').forEach(function(form) {
       form.addEventListener('submit', function(e) {
-        e.preventDefault(); // Previeni l'invio immediato del modulo
+        e.preventDefault();
         const form = e.target;
 
-        // Mostra il popup di conferma
         Swal.fire({
           title: 'Sei sicuro?',
           text: "Questa azione non può essere annullata!",
@@ -100,15 +101,14 @@
           cancelButtonText: 'Annulla'
         }).then((result) => {
           if (result.isConfirmed) {
-            form.submit(); // Invia il modulo se confermato
+            form.submit();
           }
         });
       });
     });
 
-    // Nascondi il messaggio di successo dopo 5 secondi
     setTimeout(function() {
-      $('#call-mess').fadeOut('slow'); // 'slow' è una velocità predefinita per il fadeOut, puoi usare un valore in millisecondi se preferisci
+      $('#call-mess').fadeOut('slow');
     }, 3000);
   });
 </script>

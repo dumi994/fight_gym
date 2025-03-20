@@ -64,16 +64,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 });
 
-Route::middleware(['auth', 'role:instructor'])->group(function () {
-    Route::get('/instructor', function () {
-        $user = Auth::user();
-
-        // Recupera i corsi associati all'utente loggato
-        $courses = $user->courses;
-
-        return view('instructor.index', compact('courses'));
-    });
+Route::middleware(['auth', 'role:trainer'])->group(function () {
+    // Dashboard principale per il trainer
+    Route::resource('/trainer-dashboard', TrainerController::class)->only('index');
+    // Rotte per gli allievi del trainer
+    Route::get('/trainer-dashboard/students', [StudentController::class, 'index'])->name('trainer.students.index');
+    Route::get('/trainer-dashboard/students/create', [StudentController::class, 'create'])->name('trainer.students.create');
+    Route::post('/trainer-dashboard/students', [StudentController::class, 'store'])->name('trainer.students.store');
+    Route::get('/trainer-dashboard/students/{student}', [StudentController::class, 'show'])->name('trainer.students.show');
+    Route::get('/trainer-dashboard/students/{student}/edit', [StudentController::class, 'edit'])
+        ->name('trainer.students.edit');
+    Route::delete('/trainer-dashboard/students/{student}', [StudentController::class, 'destroy'])
+        ->name('trainer.students.destroy');
+    // Altre rotte per edit, update, delete, ecc.
 });
+
 /* Route::get('/', function () {
     return view('welcome');
 });

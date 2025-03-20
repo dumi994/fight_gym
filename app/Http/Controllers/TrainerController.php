@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Trainer;
 use App\Models\User;
 
+use App\Models\Student;
 
 class TrainerController extends Controller
 {
@@ -15,8 +16,13 @@ class TrainerController extends Controller
     public function index()
     {
         /*  $trainers = Trainer::all(); */
-        $users = User::all();
-        return view('admin.trainers.index', compact('users'));
+        $trainer = auth()->user(); // Supponendo che il trainer sia l'utente loggato
+        $courses = $trainer->mainCourses;
+        $students = Student::whereHas('courses', function ($query) use ($courses) {
+            $query->whereIn('courses.id', $courses->pluck('id'));
+        })->get();
+
+        return view('trainer.index', compact('students'));
     }
 
     /**

@@ -36,6 +36,6 @@ class Student extends Model
     }
     public function memberships()
     {
-        return $this->hasOne(StudentMembership::class);
+        return $this->hasMany(StudentMembership::class, 'student_id');
     }
 }

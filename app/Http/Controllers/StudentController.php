@@ -27,11 +27,20 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $users = User::all();
-        $courses = Course::all();
-        return view('admin.students.create', compact('users', 'courses'));
-    }
+        $courses = null;
+        $users = null;
 
+        if (auth()->user()->hasRole('admin')) {
+            $users = User::all();
+            $courses = Course::all();
+            return view('admin.students.create', compact('users', 'courses'));
+        } elseif (auth()->user()->hasRole('trainer')) {
+            $trainer = auth()->user();
+            $courses = $trainer->mainCourses;
+            $users = User::all(); // O qualsiasi altra logica per ottenere gli utenti necessari
+        }
+        return view('trainer.students.create', compact('users', 'courses'));
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -41,6 +50,7 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         // Validazione dei dati
+        /*  dd($request->all()); */
         $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
@@ -87,8 +97,14 @@ class StudentController extends Controller
             $student->medical_certificate_path = $filePath;
             $student->save(); // Salva il percorso aggiornato
         }
+        if (auth()->user()->hasRole('admin')) {
+            return redirect()->route('students.index')->with('success', 'Nuovo allievo aggiunto.');
+        } elseif (auth()->user()->hasRole('trainer')) {
+            return redirect()->route('trainer-dashboard.index')->with('success', 'Nuovo allievo aggiunto.');
+        }
 
-        return redirect()->route('students.index')->with('success', 'Nuovo allievo aggiunto.');
+        // Come fallback, redirigi altrove
+        return redirect()->route('home')->with('error', 'Operazione non valida.');
     }
 
 
@@ -97,7 +113,14 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        $student->load(['attendances', 'memberships', 'courses']);
+        //dd($student->courses);
+        if (auth()->user()->hasRole('admin')) {
+            return view('admin.students.show', compact('student'));
+        } elseif (auth()->user()->hasRole('trainer')) {
+            return view('trainer.students.show', compact('student'));
+        }
+        /* return view('admin.students.show', compact('student')); */
     }
 
     /**
