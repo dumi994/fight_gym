@@ -258,7 +258,11 @@ class AttendanceController extends Controller
             'course' => [
                 'id' => $course->id,
                 'title' => $course->title,
-                'days' => $days
+                'days' => $days,
+                'course_start' => $course->course_start,
+                'course_end' => $course->course_end
+
+
             ],
             'students' => $course->students
         ]);

@@ -5,7 +5,7 @@
 <div class="p-2">
 
   <div class="pt-5">
-    <a href="/dashboard/students/create" class="btn btn-success">Aggiungi nuovo allievo</a>
+    <a href="/trainer-dashboard/students/create" class="btn btn-success">Aggiungi nuovo allievo</a>
   </div>
   <div class="message py-4">
     @if(session()->has('success'))
@@ -24,7 +24,7 @@
       <tr>
         <th>Nome</th>
         <th>Email</th>
-        <th>Corsi Associati</th>  <!-- 🔥 Nuova colonna -->
+        <th>Corsi Associati</th>  <!-- Nuova colonna -->
         <th style="width:8% !important;">Azioni</th>
       </tr>
     </thead>
@@ -55,21 +55,11 @@
 
         <td style="width:8% !important;">
           <div class="d-flex justify-content-between">
-            <a href="{{ route('students.show', $student->id) }}">
+            <a href="{{ route('trainer.students.show', $student->id) }}">
               <span class="material-symbols-outlined">
                 info
               </span>
             </a>
-            <a href="{{ route('students.edit', $student->id) }}">
-              <span class="material-symbols-outlined">border_color</span>
-            </a>
-            <form action="{{ route('students.destroy', $student->id) }}" method="POST" onsubmit="return confirmDelete();">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="btn btn-link p-0">
-                <span class="material-symbols-outlined text-danger">delete</span>
-              </button>
-            </form>
           </div>
         </td>
       </tr>

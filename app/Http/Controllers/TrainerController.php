@@ -24,6 +24,16 @@ class TrainerController extends Controller
 
         return view('trainer.index', compact('students'));
     }
+
+    public function studentsIndex()
+    {
+        $trainer = auth()->user();
+        $students = Student::whereHas('courses', function ($query) use ($trainer) {
+            $query->whereIn('courses.id', $trainer->mainCourses->pluck('id'));
+        })->get();
+
+        return view('trainer.students.index', compact('students'));
+    }
     /* public function getCoursesForTrainer()
     {
         $trainer = auth()->user();

@@ -1,7 +1,7 @@
 @extends('layouts.tpl')
 
 @section('content')
-<div class="p-3 mt-5">
+<div class="p-2 mt-5">
     <h1 class="text-center">Registro delle Presenze</h1>
 
     <div id="calendar"></div>

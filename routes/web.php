@@ -86,6 +86,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:trainer'])->group(function () {
+    Route::get('/trainer-dashboard', function () {
+        return view('trainer.index');
+    });
     // Dashboard principale per il trainer
     Route::resource('/trainer-dashboard/courses', CourseController::class)->names([
         'index' => 'trainer.courses.index',
@@ -97,7 +100,10 @@ Route::middleware(['auth', 'role:trainer'])->group(function () {
         'destroy' => 'trainer.courses.destroy',
     ]);
     // Rotte per gli allievi del trainer
-    Route::get('/trainer-dashboard/students', [TrainerController::class, 'index'])->name('trainer.students.index');
+    /*     Route::get('/trainer-dashboard/students', [TrainerController::class, 'index'])->name('trainer.students.index');
+ */
+    Route::get('/trainer-dashboard/students', [TrainerController::class, 'studentsIndex'])
+        ->name('trainer.students.index');
     Route::get('/trainer-dashboard/students/create', [StudentController::class, 'create'])->name('trainer.students.create');
     Route::post('/trainer-dashboard/students', [StudentController::class, 'store'])->name('trainer.students.store');
     Route::get('/trainer-dashboard/students/{student}', [StudentController::class, 'show'])->name('trainer.students.show');
@@ -105,8 +111,8 @@ Route::middleware(['auth', 'role:trainer'])->group(function () {
         ->name('trainer.students.edit');
     Route::delete('/trainer-dashboard/students/{student}', [StudentController::class, 'destroy'])
         ->name('trainer.students.destroy');
-    // Altre rotte per edit, update, delete, ecc.
-    Route::resource('/trainer-dashboard/courses', CourseController::class);
+        // Altre rotte per edit, update, delete, ecc.
+        /*   Route::resource('/trainer-dashboard/courses', CourseController::class) */;
     Route::resource('/trainer-dashboard/attendances', AttendanceController::class);
 });
 

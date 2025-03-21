@@ -4,89 +4,66 @@
 
 <div class="p-2">
 
-  <div class="pt-5">
-    <a href="/trainer-dashboard/students/create" class="btn btn-success">Aggiungi nuovo allievo</a>
-  </div>
-  <div class="message py-4">
-    @if(session()->has('success'))
-    <div class="alert alert-success" id="call-mess">
-      {{ session()->get('success') }}
+  <div class="row">
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-info">
+        <div class="inner">
+          <h3>{{count(getSidebarData('courseStudents'))}}</h3>
+          <p>I miei allievi</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-person-add"></i>
+        </div>
+        <a href="/trainer-dashboard/students" class="small-box-footer">Gestione allievi <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
     </div>
-    @elseif(session()->has('delete'))
-    <div class="alert alert-danger" id="call-mess">
-      {{ session()->get('delete') }}
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-success">
+        <div class="inner">
+          <h3>{{count(getSidebarData('courseTrainer'))}}</h3>
+
+          <p>I miei corsi</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-pie-graph"></i>
+
+        </div>
+        <a href="/trainer-dashboard/courses" class="small-box-footer">Gestione corsi <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
     </div>
-    @endif
-  </div>
-  
-  <table id="example" class="display mt-5" style="width:100%">
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Corsi Associati</th>  <!-- 🔥 Nuova colonna -->
-        <th style="width:8% !important;">Azioni</th>
-      </tr>
-    </thead>
+ 
     
-    <tbody>
-      @foreach($students as $student)
-      <tr>
-        <td>{{$student->first_name}} {{$student->last_name}}</td>
-        <td>{{$student->email}}</td>
-        <td>
-            @if($student->courses->isEmpty())
-                <span class="badge bg-secondary">Nessun corso</span>
-            @else
-              @foreach($student->courses as $course)
-                <span class="badge 
-                  @if($loop->index % 5 == 0) bg-primary 
-                  @elseif($loop->index % 5 == 1) bg-success 
-                  @elseif($loop->index % 5 == 2) bg-danger 
-                  @elseif($loop->index % 5 == 3) bg-warning 
-                  @else bg-info 
-                  @endif">
-                  {{ $course->title }}
-                </span>
-                @endforeach
-            @endif
-        </td>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-danger">
+        <div class="inner">
+          <h3>&nbsp;</h3>
 
-
-        <td style="width:8% !important;">
-          <div class="d-flex justify-content-center">
-            <a href="{{ route('trainer.students.show', $student->id) }}">
-              <span class="material-symbols-outlined">
-                info
-              </span>
-            </a>
-            
-          </div>
-        </td>
-      </tr>
-      @endforeach
-    </tbody>
-
-    <tfoot>
-      <tr>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Corsi Associati</th>
-        <th style="width:8% !important;">Azioni</th>
-      </tr>
-    </tfoot>
-  </table>
+          <p>Calendario</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-calendar"></i>
+        </div>
+        <a href="/trainer-dashboard/attendances" class="small-box-footer">Registro presenze <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <!-- ./col -->
+  </div>
 </div>
 
 @endsection
 
 @section('scripts')
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     new DataTable('#example');
 
-    document.querySelectorAll('form[method="POST"]').forEach(function(form) {
-      form.addEventListener('submit', function(e) {
+    document.querySelectorAll('form[method="POST"]').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
         e.preventDefault();
         const form = e.target;
 
@@ -107,7 +84,7 @@
       });
     });
 
-    setTimeout(function() {
+    setTimeout(function () {
       $('#call-mess').fadeOut('slow');
     }, 3000);
   });

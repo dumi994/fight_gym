@@ -24,7 +24,7 @@
       <tr>
         <th>Nome</th>
         <th>Email</th>
-        <th>Corsi Associati</th>  <!-- 🔥 Nuova colonna -->
+        <th>Corsi Associati</th>  <!-- Nuova colonna -->
         <th style="width:8% !important;">Azioni</th>
       </tr>
     </thead>

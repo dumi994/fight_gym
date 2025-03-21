@@ -11,7 +11,7 @@
   @elseif(session()->has('delete'))
   <div class="alert alert-danger" id="call-mess">
     {{ session()->get('delete') }}
-  </div>
+   </div>
   @endif
   <table id="example" class="display" style="width:100%">
     <thead>
@@ -220,7 +220,7 @@ function openAttendanceModal(courseId) {
 
         calendar.render();
 
-        // 🔥 FORZA IL RIDISEGNO DEL CALENDARIO DOPO L'APERTURA DELLA MODALE
+        // FORZA IL RIDISEGNO DEL CALENDARIO DOPO L'APERTURA DELLA MODALE
         setTimeout(function() {
             calendar.updateSize();
         }, 300);

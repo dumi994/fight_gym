@@ -222,7 +222,7 @@ function openAttendanceModal(courseId) {
 
         calendar.render();
 
-        // 🔥 FORZA IL RIDISEGNO DEL CALENDARIO DOPO L'APERTURA DELLA MODALE
+        // FORZA IL RIDISEGNO DEL CALENDARIO DOPO L'APERTURA DELLA MODALE
         setTimeout(function() {
             calendar.updateSize();
         }, 300);
