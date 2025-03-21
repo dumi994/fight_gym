@@ -151,8 +151,11 @@
 
         <!-- Giorni -->
         <div class="form-group col-6">
-          <label for="days">Giorni</label>
-          <textarea class="form-control @error('days') is-invalid @enderror" name="days" id="days" placeholder="Inserisci i giorni senza spazi e separati da |">{{ old('days') }}</textarea>
+          <label for="days">
+            Giorni <br>
+            <small>Inserisci i giorni senza spazi e separati da |</small>
+          </label>
+          <textarea class="form-control @error('days') is-invalid @enderror" name="days" id="days" placeholder="Es: lunedi|mercoledi|venerdi">{{ old('days') }}</textarea>
           @error('days')
           <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>

@@ -117,6 +117,12 @@
              <p>Calendario</p>
            </a>
          </li>
+         <li class="nav-item">
+           <a href="/dashboard/check-payments" class="nav-link {{ Request::is('dashboard/check-payments') ? 'active' : '' }}">
+             &nbsp; &nbsp;<i class="ion ion-checkmark"></i> &nbsp;
+             <p>Controlla pagamenti</p>
+           </a>
+         </li>
         @endif
         <!-- ######################################################################################## -->
         <!-- ######################################################################################## -->
@@ -185,6 +191,7 @@
              <p>Calendario</p>
            </a>
          </li>
+         
         @endif
        </ul>
      </nav>

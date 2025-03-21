@@ -62,8 +62,12 @@ class CourseController extends Controller
         if ($request->has('trainers')) {
             $course->trainers()->sync($request->trainers);
         }
-
-        return redirect()->route('admin.courses.index')->with('success', 'Nuovo corso aggiunto con successo!');
+        if (auth()->user()->hasRole('trainer')) {
+            return redirect()->route('trainer.courses.index')->with('success', 'Nuovo corso aggiunto con successo!');
+        } else {
+            return redirect()->route('admin.courses.index')->with('success', 'Nuovo corso aggiunto con successo!');
+        }
+        /* return redirect()->route('admin.courses.index')->with('success', 'Nuovo corso aggiunto con successo!'); */
     }
     /**
      * Display the specified resource.
@@ -82,7 +86,10 @@ class CourseController extends Controller
         $trainers = User::whereHas('roles', function ($query) {
             $query->where('name', 'trainer');
         })->get();
-
+        if (auth()->user()->hasRole('trainer')) {
+            return view('trainer.courses.edit', compact('course', 'trainers'));
+        }
+        // Se è admin, restituisci la view admin
         return view('admin.courses.edit', compact('course', 'trainers'));
     }
 
@@ -92,7 +99,7 @@ class CourseController extends Controller
     public function update(Request $request, Course $course)
     {
         $request->validate([
-            'title' => 'required|max:255',
+            'title' => 'required|max:255|unique:courses,title,' . $course->id,
             'duration' => 'nullable|date_format:H:i',
             'state' => 'required',
             'course_start' => 'nullable|date_format:H:i',
@@ -105,16 +112,26 @@ class CourseController extends Controller
             'trainers.*' => 'exists:users,id',
         ]);
 
-        // Aggiorna il corso
         $course->update($request->except('trainers'));
 
-        // Aggiorna i trainer aggiuntivi
         if ($request->has('trainers')) {
             $course->trainers()->sync($request->trainers);
         }
 
-        return redirect()->route('courses.index')->with('success', 'Corso aggiornato con successo!');
+        // 🔍 Controlliamo il ruolo dell'utente e reindirizziamo alla dashboard giusta
+        if (auth()->user()->hasRole('trainer')) {
+            return redirect()->route('trainer.courses.index')
+                ->with('success', 'Corso aggiornato con successo!');
+        } elseif (auth()->user()->hasRole('admin')) {
+            return redirect()->route('admin.courses.index')
+                ->with('success', 'Corso aggiornato con successo!');
+        }
+
+        // Se per qualche motivo non ha nessuno dei due ruoli, blocchiamo l'accesso
+        abort(403, 'Accesso negato.');
     }
+
+
     /**
      * Remove the specified resource from storage.
      */

@@ -15,7 +15,7 @@
     </div>
     @endif
 
-    <form action="{{ isset($course) ? route('courses.update', $course->id) : route('courses.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ isset($course) ? route('trainer.courses.update', $course->id) : route('trainer.courses.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       @if(isset($course))
       @method('PUT')

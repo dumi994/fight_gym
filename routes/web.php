@@ -83,6 +83,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         $students = Student::get();
         return view('admin.membership.index', compact('students'));
     });
+    Route::get('/dashboard/check-payments', function () {
+        $students = Student::with(['attendances', 'memberships'])->get();
+
+        return view('admin.check-payments', compact('students'));
+    });
 });
 
 Route::middleware(['auth', 'role:trainer'])->group(function () {
@@ -120,7 +125,7 @@ Route::middleware(['auth', 'role:trainer'])->group(function () {
 Route::get('/dashboard', function () {
     $students = Student::with(['attendances', 'memberships'])->get();
     //dd($students);
-    return view('dashboard', compact('students'));
+    return view('admin.dashboard', compact('students'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
