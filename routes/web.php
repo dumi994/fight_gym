@@ -116,10 +116,7 @@ Route::middleware(['auth', 'role:trainer'])->group(function () {
     Route::resource('/trainer-dashboard/attendances', AttendanceController::class);
 });
 
-/* Route::get('/', function () {
-    return view('welcome');
-});
- */
+
 Route::get('/dashboard', function () {
     $students = Student::with(['attendances', 'memberships'])->get();
     //dd($students);

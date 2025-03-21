@@ -63,7 +63,7 @@ class CourseController extends Controller
             $course->trainers()->sync($request->trainers);
         }
 
-        return redirect()->route('courses.index')->with('success', 'Nuovo corso aggiunto con successo!');
+        return redirect()->route('admin.courses.index')->with('success', 'Nuovo corso aggiunto con successo!');
     }
     /**
      * Display the specified resource.

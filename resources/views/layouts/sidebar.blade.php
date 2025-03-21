@@ -76,7 +76,7 @@
                </a>
              </li>
              <li class="nav-item">
-               <a href="{{ route('courses.create') }}" class="nav-link {{ Request::is('dashboard/courses/create') ? 'active' : '' }}">
+               <a href="{{ route('admin.courses.create') }}" class="nav-link {{ Request::is('dashboard/courses/create') ? 'active' : '' }}">
                  <i class="far fa-circle nav-icon"></i>
                  <p>Aggiungi corso</p>
                </a>

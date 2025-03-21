@@ -40,13 +40,13 @@
           <td>{{$course->course_end}}</td>
           <td style="width:12% !important;">
             <div class="d-flex justify-content-around">
-              <a href="{{ route('courses.edit', $course->id) }}">
+              <a href="{{ route('admin.courses.edit', $course->id) }}">
                 <span class="material-symbols-outlined">border_color</span>
               </a>
               <button class="btn btn-primary" onclick="openAttendanceModal({{ $course->id }})">
                 📅 Presenze
               </button>
-              <form action="{{ route('courses.destroy', $course->id) }}" method="POST" onsubmit="return confirmDelete();">
+              <form action="{{ route('admin.courses.destroy', $course->id) }}" method="POST" onsubmit="return confirmDelete();">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-link p-0">

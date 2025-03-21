@@ -127,19 +127,14 @@
           </div>
 
           <!-- Campo Certificato Medico -->
-          <div class="form-group col-md-12">
-              <label for="medical_certificate_path">Certificato Medico</label>
-    
-              <!-- Mostra il file esistente se presente -->
-              @if(isset($student) && $student->medical_certificate_path)
-                  <div class="mb-2">
-                      <strong>File attuale:</strong> 
-                      <a href="{{ Storage::url($student->medical_certificate_path) }}" target="_blank" class="btn btn-sm btn-info">
-                          Visualizza Certificato
-                      </a>
-                  </div>
+          <div class="form-group col-md-12 ">
+              <label for="medical_certificate_path ">Certificato Medico  <!-- Mostra il file esistente se presente -->
+              @if(isset($student) && $student->medical_certificate_path)       
+                <a href="{{ Storage::url($student->medical_certificate_path) }}" target="_blank" class="btn btn-sm btn-info">
+                    Visualizza Certificato
+                </a>
               @endif
-
+              </label>
               <input type="file" class="form-control-file @error('medical_certificate_path') is-invalid @enderror" 
                     name="medical_certificate_path" id="medical_certificate_path">
 

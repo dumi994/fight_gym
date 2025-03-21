@@ -15,7 +15,7 @@
     </div>
     @endif
 
-    <form action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
 
       <div class="form-row">
