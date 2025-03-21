@@ -5,7 +5,7 @@
 <div class="p-2">
 
   <div class="pt-5">
-    <a href="/dashboard/students/create" class="btn btn-success">Aggiungi nuovo allievo</a>
+    <a href="/trainer-dashboard/students/create" class="btn btn-success">Aggiungi nuovo allievo</a>
   </div>
   <div class="message py-4">
     @if(session()->has('success'))

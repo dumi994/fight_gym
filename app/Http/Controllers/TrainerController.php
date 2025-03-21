@@ -24,6 +24,58 @@ class TrainerController extends Controller
 
         return view('trainer.index', compact('students'));
     }
+    /* public function getCoursesForTrainer()
+    {
+        $trainer = auth()->user();
+        $courses = $trainer->mainCourses;
+        return response()->json($courses);
+    } */
+    public function getCoursesForTrainer()
+    {
+        $trainer = auth()->user();
+        $courses = $trainer->mainCourses;
+
+        $events = [];
+
+        foreach ($courses as $course) {
+            $days = explode('|', $course->days);
+            foreach ($days as $day) {
+                $nextDate = $this->getNextDayDate($day);
+
+                if ($nextDate) {
+                    $events[] = [
+                        'id' => $course->id,
+                        'title' => $course->title,
+                        'start' => $nextDate->format('Y-m-d'),
+                        'backgroundColor' => '#007bff',
+                        'borderColor' => '#007bff'
+                    ];
+                }
+            }
+        }
+
+        return response()->json($events);
+    }
+
+    // Funzione per calcolare la prossima data
+    private function getNextDayDate($day)
+    {
+        $dayMap = [
+            'lunedi' => 1,
+            'martedi' => 2,
+            'mercoledi' => 3,
+            'giovedi' => 4,
+            'venerdi' => 5,
+            'sabato' => 6,
+            'domenica' => 0
+        ];
+
+        if (!isset($dayMap[$day])) return null;
+
+        $today = now();
+        $diff = ($dayMap[$day] - $today->dayOfWeek + 7) % 7;
+        return $today->addDays($diff);
+    }
 
     /**
      * Show the form for creating a new resource.

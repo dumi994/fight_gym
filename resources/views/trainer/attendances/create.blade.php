@@ -1,3 +1,5 @@
+@extends('layouts.app')
+
 @section('content')
 <h1>Registro delle Presenze</h1>
 <form action="{{ route('attendances.store') }}" method="POST">

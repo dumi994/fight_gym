@@ -3,9 +3,7 @@
 
 @section('content')
 <div class="px-2 pt-5">
-  <div class="pt-5">
-    <a href="/dashboard/courses/create" class="btn btn-success">Aggiungi nuovo corso</a>
-  </div>
+ 
   @if(session()->has('success'))
   <div class="alert alert-success" id="call-mess">
     {{ session()->get('success') }}

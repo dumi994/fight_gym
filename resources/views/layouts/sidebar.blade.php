@@ -152,7 +152,12 @@
              </p>
            </a>
            <ul class="nav nav-treeview">
-             
+             <li class="nav-item">
+               <a href="/trainer-dashboard/students" class="nav-link {{ Request::is('trainer-dashboard/students') ? 'active' : '' }}">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>Tutti gli allievi</p>
+               </a>
+             </li>
              <li class="nav-item">
                <a href="{{ route('trainer.students.create') }}" class="nav-link {{ Request::is('trainer-dashboard/students/create') ? 'active' : '' }}">
                  <i class="far fa-circle nav-icon"></i>

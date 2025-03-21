@@ -20,11 +20,23 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-
         $attendances = Attendance::with('student', 'course')->get();
-        $corsi = Course::all(); // Recupera tutti i corsi
-        return view('admin.attendances.index', compact('attendances', 'corsi'));
+
+        if (auth()->user()->hasRole('admin')) {
+            // Per l'amministratore, mostri tutti i corsi
+            $corsi = Course::all();
+            return view('admin.attendances.index', compact('attendances', 'corsi'));
+        } elseif (auth()->user()->hasRole('trainer')) {
+            // Per il trainer, mostri solo i corsi a lui associati
+            $trainer = auth()->user();
+            $corsi = $trainer->mainCourses;
+            return view('trainer.attendances.index', compact('attendances', 'corsi'));
+        }
+
+        // Come fallback, puoi fare il redirect o lanciare un'eccezione
+        abort(403);
     }
+
 
     /**
      * Show the form for creating a new resource.

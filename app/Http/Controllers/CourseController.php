@@ -14,9 +14,14 @@ class CourseController extends Controller
      */
     public function index()
     {
-
-        $courses = Course::all();
-        return view('admin.courses.index', compact('courses'));
+        if (auth()->user()->hasRole('admin')) {
+            $courses = Course::all();
+            return view('admin.courses.index', compact('courses'));
+        } elseif (auth()->user()->hasRole('trainer')) {
+            $trainer = auth()->user();
+            $courses = $trainer->mainCourses; // Ottieni solo i corsi associati a questo trainer
+            return view('trainer.courses.index', compact('courses'));
+        }
     }
 
     /**
